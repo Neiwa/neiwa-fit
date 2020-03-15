@@ -14,17 +14,18 @@ import { compose } from 'redux';
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
-import makeSelectLoginForm, { makeIsLoginInProgress } from './selectors';
-import { makeIsLoggedIn } from '../App/selectors';
+import makeSelectLoginForm, {
+  makeIsLoginInProgress,
+  makeIsLoggedIn,
+} from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
-import { loginUser, logoutUser } from '../App/actions';
-import { setLoginInProgress } from './actions';
+import { setLoginInProgress, loginUser, logoutUser } from './actions';
 
 import credentials from '../../utils/credentials';
 
-const key = 'loginForm';
+const key = 'login';
 
 export function LoginForm({
   isLoggedIn,
@@ -60,7 +61,7 @@ export function LoginForm({
       onFailure={onResponseGoogle}
       cookiePolicy="single_host_origin"
       isSignedIn
-      scope="https://www.googleapis.com/auth/fitness.activity.read"
+      scope="https://www.googleapis.com/auth/fitness.body.read"
     />
   );
 }
@@ -86,7 +87,6 @@ function mapDispatchToProps(dispatch) {
     onResponseGoogle: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loginUser(evt));
-      dispatch(setLoginInProgress(false));
     },
     onLogoutUser: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();

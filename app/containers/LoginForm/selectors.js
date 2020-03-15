@@ -5,7 +5,7 @@ import { initialState } from './reducer';
  * Direct selector to the loginForm state domain
  */
 
-const selectLoginFormDomain = state => state.loginForm || initialState;
+const selectLoginDomain = state => state.login || initialState;
 
 /**
  * Other specific selectors
@@ -13,8 +13,14 @@ const selectLoginFormDomain = state => state.loginForm || initialState;
 
 const makeIsLoginInProgress = () =>
   createSelector(
-    selectLoginFormDomain,
-    loginFormState => loginFormState.loginInProgress,
+    selectLoginDomain,
+    loginState => loginState.loginInProgress,
+  );
+
+const makeIsLoggedIn = () =>
+  createSelector(
+    selectLoginDomain,
+    loginState => loginState.isLoggedIn,
   );
 
 /**
@@ -23,9 +29,9 @@ const makeIsLoginInProgress = () =>
 
 const makeSelectLoginForm = () =>
   createSelector(
-    selectLoginFormDomain,
+    selectLoginDomain,
     substate => substate,
   );
 
 export default makeSelectLoginForm;
-export { selectLoginFormDomain, makeIsLoginInProgress };
+export { selectLoginDomain, makeIsLoginInProgress, makeIsLoggedIn };
