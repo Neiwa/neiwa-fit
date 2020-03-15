@@ -23,6 +23,12 @@ const makeIsLoggedIn = () =>
     loginState => loginState.isLoggedIn,
   );
 
+const makeBearerToken = () =>
+  createSelector(
+    selectLoginDomain,
+    loginState => loginState.evt.accessToken,
+  );
+
 /**
  * Default selector used by LoginForm
  */
@@ -34,4 +40,9 @@ const makeSelectLoginForm = () =>
   );
 
 export default makeSelectLoginForm;
-export { selectLoginDomain, makeIsLoginInProgress, makeIsLoggedIn };
+export {
+  selectLoginDomain,
+  makeIsLoginInProgress,
+  makeIsLoggedIn,
+  makeBearerToken,
+};
