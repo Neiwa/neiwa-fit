@@ -4,6 +4,7 @@
  *
  */
 import produce from 'immer';
+import { subMonths, startOfDay } from 'date-fns';
 import {
   LOAD_WEIGHT_DATA,
   LOAD_WEIGHT_DATA_ERROR,
@@ -13,8 +14,8 @@ import {
 } from './constants';
 
 export const initialState = {
-  start: '0',
-  end: '0',
+  start: startOfDay(subMonths(new Date(), 1)).valueOf(),
+  end: new Date().valueOf(),
   loading: false,
   error: false,
   data: false,

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import { format } from 'date-fns';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -42,13 +43,13 @@ export function WeightForm({
         <input
           id="start"
           type="date"
-          valueAsNumber={start}
+          value={format(start, 'yyyy-MM-dd')}
           onChange={onChangeStart}
         />
         <input
           id="end"
           type="date"
-          valueAsNumber={end}
+          value={format(end, 'yyyy-MM-dd')}
           onChange={onChangeEnd}
         />
         <button type="submit">Get</button>
@@ -84,8 +85,10 @@ function mapDispatchToProps(dispatch) {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(loadWeightData());
     },
-    onChangeStart: evt => dispatch(changeStart(evt.target.valueAsNumber)),
-    onChangeEnd: evt => dispatch(changeEnd(evt.target.valueAsNumber)),
+    onChangeStart: evt =>
+      dispatch(changeStart(new Date(evt.target.value).valueOf())),
+    onChangeEnd: evt =>
+      dispatch(changeEnd(new Date(evt.target.value).valueOf())),
   };
 }
 
