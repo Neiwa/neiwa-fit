@@ -29,6 +29,32 @@ const makeSelectLoading = () =>
     substate => substate.loading,
   );
 
+const makeSelectWeightData = () =>
+  createSelector(
+    selectWeightFormDomain,
+    substate => {
+      const weightData = Array.from(
+        substate.dataCache.data,
+        ([key, value]) => ({
+          timestamp: key,
+          value,
+        }),
+      ).filter(
+        e => e.timestamp >= substate.start && e.timestamp <= substate.end,
+      );
+
+      weightData.sort(e => e.timestamp);
+      weightData.reverse();
+      return weightData;
+    },
+  );
+
+const makeSelectWeightDataSlices = () =>
+  createSelector(
+    selectWeightFormDomain,
+    substate => substate.dataCache.slices,
+  );
+
 /**
  * Default selector used by WeightForm
  */
@@ -45,4 +71,6 @@ export {
   makeSelectStart,
   makeSelectEnd,
   makeSelectLoading,
+  makeSelectWeightData,
+  makeSelectWeightDataSlices,
 };

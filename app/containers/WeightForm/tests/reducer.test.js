@@ -3,7 +3,7 @@ import weightFormReducer from '../reducer';
 // import { someAction } from '../actions';
 
 /* eslint-disable default-case, no-param-reassign */
-describe('weightFormReducer', () => {
+describe.skip('weightFormReducer', () => {
   let state;
   beforeEach(() => {
     state = {

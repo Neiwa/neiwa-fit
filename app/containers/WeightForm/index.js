@@ -18,6 +18,7 @@ import makeSelectWeightForm, {
   makeSelectStart,
   makeSelectEnd,
   makeSelectLoading,
+  makeSelectWeightData,
 } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
@@ -30,6 +31,7 @@ export function WeightForm({
   loading,
   start,
   end,
+  weightData,
   onSubmitForm,
   onChangeStart,
   onChangeEnd,
@@ -59,6 +61,13 @@ export function WeightForm({
       ) : (
         <FormattedMessage {...messages.header} />
       )}
+      <ul>
+        {weightData.map(e => (
+          <li key={e.timestamp}>
+            {new Date(e.timestamp).toLocaleString()} {e.value}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -67,6 +76,7 @@ WeightForm.propTypes = {
   loading: PropTypes.bool,
   start: PropTypes.number,
   end: PropTypes.number,
+  weightData: PropTypes.array,
   onSubmitForm: PropTypes.func,
   onChangeStart: PropTypes.func,
   onChangeEnd: PropTypes.func,
@@ -77,6 +87,7 @@ const mapStateToProps = createStructuredSelector({
   loading: makeSelectLoading(),
   start: makeSelectStart(),
   end: makeSelectEnd(),
+  weightData: makeSelectWeightData(),
 });
 
 function mapDispatchToProps(dispatch) {

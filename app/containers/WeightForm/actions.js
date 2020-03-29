@@ -32,9 +32,10 @@ export function loadWeightData() {
   };
 }
 
-export function weightDataLoaded(data) {
+export function weightDataLoaded(data, dataFetched = true) {
   return {
     type: LOAD_WEIGHT_DATA_SUCCESS,
+    dataFetched,
     data,
   };
 }

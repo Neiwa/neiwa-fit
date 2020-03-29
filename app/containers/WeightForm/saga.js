@@ -1,7 +1,12 @@
 import { takeEvery, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
 import { makeBearerToken } from 'containers/LoginForm/selectors';
-import { makeSelectStart, makeSelectEnd } from './selectors';
+import { removeSlices } from 'utils/slice';
+import {
+  makeSelectStart,
+  makeSelectEnd,
+  makeSelectWeightDataSlices,
+} from './selectors';
 import { weightDataLoaded, weightDataLoadingError } from './actions';
 
 import { LOAD_WEIGHT_DATA } from './constants';
@@ -28,16 +33,24 @@ export function* fetchWeightData() {
   const start = yield select(makeSelectStart());
   const end = yield select(makeSelectEnd());
   const bearerToken = yield select(makeBearerToken());
-  try {
-    const data = yield call(getWeightData, {
-      start,
-      end,
-      type: 'derived:com.google.weight:com.google.android.gms:merge_weight',
-      bearerToken,
-    });
-    yield put(weightDataLoaded(data));
-  } catch (err) {
-    yield put(weightDataLoadingError(err));
+  const dataSlices = yield select(makeSelectWeightDataSlices());
+  const requestSlices = removeSlices({ start, end }, dataSlices);
+  if (requestSlices.length === 0) {
+    yield put(weightDataLoaded(null, false));
+  }
+  // eslint-disable-next-line no-restricted-syntax
+  for (const slice of requestSlices) {
+    try {
+      const response = yield call(getWeightData, {
+        start: slice.start,
+        end: slice.end,
+        type: 'derived:com.google.weight:com.google.android.gms:merge_weight',
+        bearerToken,
+      });
+      yield put(weightDataLoaded(response.data));
+    } catch (err) {
+      yield put(weightDataLoadingError(err));
+    }
   }
 }
 
