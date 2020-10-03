@@ -1,4 +1,4 @@
-import { removeSlices, addSlice } from '../slice';
+import { removeSlices, addSlice, partitionSlices } from '../slice';
 
 describe('removeSlices()', () => {
   it('returns one slice', () => {
@@ -79,6 +79,30 @@ describe('addSlice()', () => {
   it('adds slice already in slices', () => {
     expect(addSlice({ start: 1, end: 2 }, [{ start: 1, end: 2 }])).toEqual([
       { start: 1, end: 2 },
+    ]);
+  });
+});
+
+describe('partitionSlices()', () => {
+  it('does not partition if not needed', () => {
+    expect(
+      partitionSlices([{ start: 1, end: 3 }, { start: 7, end: 9 }], 3),
+    ).toEqual([{ start: 1, end: 3 }, { start: 7, end: 9 }]);
+  });
+  it('partitions to maxLength', () => {
+    expect(partitionSlices([{ start: 1, end: 5 }], 2)).toEqual([
+      { start: 1, end: 3 },
+      { start: 3, end: 5 },
+    ]);
+  });
+  it('partitions multiple to maxLength', () => {
+    expect(
+      partitionSlices([{ start: 1, end: 5 }, { start: 7, end: 11 }], 2),
+    ).toEqual([
+      { start: 1, end: 3 },
+      { start: 3, end: 5 },
+      { start: 7, end: 9 },
+      { start: 9, end: 11 },
     ]);
   });
 });

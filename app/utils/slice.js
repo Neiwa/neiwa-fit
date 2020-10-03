@@ -74,3 +74,20 @@ export function addSlice(newSlice, slices) {
   }
   return slices;
 }
+
+export function partitionSlices(slices, maxLength) {
+  const newSlices = [];
+
+  slices.forEach(slice => {
+    while (slice.end - slice.start > maxLength) {
+      newSlices.push({
+        start: slice.start,
+        end: slice.start + maxLength,
+      });
+      slice.start += maxLength;
+    }
+    newSlices.push(slice);
+  });
+
+  return newSlices;
+}

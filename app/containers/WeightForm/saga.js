@@ -1,7 +1,7 @@
 import { takeEvery, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
 import { makeBearerToken } from 'containers/LoginForm/selectors';
-import { removeSlices } from 'utils/slice';
+import { removeSlices, partitionSlices } from 'utils/slice';
 import {
   makeSelectStart,
   makeSelectEnd,
@@ -34,7 +34,10 @@ export function* fetchWeightData() {
   const end = yield select(makeSelectEnd());
   const bearerToken = yield select(makeBearerToken());
   const dataSlices = yield select(makeSelectWeightDataSlices());
-  const requestSlices = removeSlices({ start, end }, dataSlices);
+  const requestSlices = partitionSlices(
+    removeSlices({ start, end }, dataSlices),
+    5270400000,
+  );
   if (requestSlices.length === 0) {
     yield put(weightDataLoaded(null, false));
   }
