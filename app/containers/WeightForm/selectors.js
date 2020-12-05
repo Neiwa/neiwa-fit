@@ -43,8 +43,7 @@ const makeSelectWeightData = () =>
         e => e.timestamp >= substate.start && e.timestamp <= substate.end,
       );
 
-      weightData.sort(e => e.timestamp);
-      weightData.reverse();
+      weightData.sort((a, b) => a.timestamp - b.timestamp);
       return weightData;
     },
   );

@@ -11,6 +11,15 @@ import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { format } from 'date-fns';
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -38,6 +47,9 @@ export function WeightForm({
 }) {
   useInjectReducer({ key, reducer });
   useInjectSaga({ key, saga });
+  const weekdayFormatter = new Intl.DateTimeFormat(undefined, {
+    weekday: 'long',
+  });
 
   return (
     <div>
@@ -61,13 +73,43 @@ export function WeightForm({
       ) : (
         <FormattedMessage {...messages.header} />
       )}
-      <ul>
+      <ResponsiveContainer width="90%" height={400}>
+        <LineChart data={weightData}>
+          <Line type="monotone" dataKey="value" />
+          <CartesianGrid />
+          <XAxis
+            dataKey="timestamp"
+            scale="time"
+            type="number"
+            domain={['auto', 'auto']}
+            angle={30}
+            height={50}
+            dy={15}
+            interval="preserveEnd"
+            padding={{ left: 30, right: 30 }}
+            tickFormatter={timestamp =>
+              new Date(timestamp).toLocaleDateString()
+            }
+          />
+          <YAxis domain={['auto', 'auto']} />
+          <Tooltip
+            formatter={value => [`${value.toFixed(1)} kg`, 'weight']}
+            labelFormatter={label => {
+              const date = new Date(label);
+              return `${date.toLocaleDateString()} ${weekdayFormatter.format(
+                date,
+              )}`;
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+      {/* <ul>
         {weightData.map(e => (
           <li key={e.timestamp}>
-            {new Date(e.timestamp).toLocaleString()} {e.value}
+            {new Date(e.timestamp).toLocaleString()} {e.value.toFixed(1)}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 }
